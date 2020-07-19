@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pepper
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pepper
+  template:
+    metadata:
+      labels:
+        app: pepper
+    spec:
+      containers:
+      - image: registry.gitlab.com/sorleone/pepper
+        name: pepper
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pepper
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  type: ClusterIP  
+  ports:
+  - name: "pepper"
+    port: 8080
+  selector:
+    app: pepper
