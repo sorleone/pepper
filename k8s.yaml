@@ -32,7 +32,7 @@ metadata:
   annotations:
     dev.okteto.com/auto-ingress: "true"
 spec:
-  type: ClusterIP  
+  type: ClusterIP
   ports:
   - name: "pepper"
     port: 8080

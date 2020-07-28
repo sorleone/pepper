@@ -35,8 +35,8 @@ type Receipt struct {
 
 //------------------------------------------------------------------------------
 
-// NewStandardReceipt creates a new Receipt with standard parameters
-func NewStandardReceipt() *Receipt {
+// MakeReceipt makes a new Receipt with standard parameters
+func MakeReceipt() *Receipt {
 	return &Receipt{
 		basicSalesTax:      0.1,
 		importDuty:         0.05,

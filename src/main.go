@@ -15,7 +15,7 @@ import (
 	"gitlab.com/sorleone/pepper/pkg/receipt"
 )
 
-var eol byte = 0x0A
+const eol byte = 0x0A
 
 func writeError(res http.ResponseWriter, statusCode int) {
 	statusText := http.StatusText(statusCode)
@@ -37,7 +37,7 @@ func receiptHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	total := receipt.NewStandardReceipt().Add(products...).GetTotal()
+	total := receipt.MakeReceipt().Add(products...).GetTotal()
 	encodedTotal, err := json.MarshalIndent(total, "", "  ")
 	if err != nil {
 		writeError(res, http.StatusInternalServerError)

@@ -1,6 +1,6 @@
 FROM golang:1.14.6-alpine3.12 as builder
 
-RUN apk add build-base
+RUN apk add --no-cache build-base=0.5-r2
 
 WORKDIR /go/src
 COPY src .

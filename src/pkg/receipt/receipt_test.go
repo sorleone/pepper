@@ -8,7 +8,7 @@ import (
 )
 
 func TestBasicSalesTax(t *testing.T) {
-	receipt := NewStandardReceipt().Add(
+	receipt := MakeReceipt().Add(
 		product.Product{
 			Name:  "book",
 			Price: 12.49,
@@ -53,7 +53,7 @@ func TestBasicSalesTax(t *testing.T) {
 }
 
 func TestImportedTax(t *testing.T) {
-	receipt := NewStandardReceipt().Add(
+	receipt := MakeReceipt().Add(
 		product.Product{
 			Name:     "bottle of perfume",
 			Price:    47.50,
@@ -86,8 +86,8 @@ func TestImportedTax(t *testing.T) {
 }
 
 func TestConsecutiveAdd(t *testing.T) {
-	repeat := 2.0
-	receipt := NewStandardReceipt().Add(
+	productDuplicationFactor := 2.0
+	products := []product.Product{
 		product.Product{
 			Name:     "bottle of perfume",
 			Price:    47.50,
@@ -100,40 +100,29 @@ func TestConsecutiveAdd(t *testing.T) {
 			Type:     product.FoodProductType,
 			Imported: true,
 		},
-	).Add(
-		product.Product{
-			Name:     "bottle of perfume",
-			Price:    47.50,
-			Type:     product.OtherProductType,
-			Imported: true,
-		},
-		product.Product{
-			Name:     "box of chocolates",
-			Price:    10.00,
-			Type:     product.FoodProductType,
-			Imported: true,
-		},
-	).GetTotal()
+	}
 
-	assert.EqualValues(t, repeat*65.15, receipt.Total)
-	assert.EqualValues(t, repeat*7.65, receipt.Taxes)
+	receipt := MakeReceipt().Add(products...).Add(products...).GetTotal()
+
+	assert.EqualValues(t, productDuplicationFactor*65.15, receipt.Total)
+	assert.EqualValues(t, productDuplicationFactor*7.65, receipt.Taxes)
 
 	for _, record := range receipt.Records {
 		switch record.Name {
 		case "bottle of perfume":
-			assert.EqualValues(t, repeat*1, record.Quantity)
-			assert.EqualValues(t, repeat*54.65, record.Total)
+			assert.EqualValues(t, productDuplicationFactor*1, record.Quantity)
+			assert.EqualValues(t, productDuplicationFactor*54.65, record.Total)
 			break
 		case "box of chocolates":
-			assert.EqualValues(t, repeat*1, record.Quantity)
-			assert.EqualValues(t, repeat*10.50, record.Total)
+			assert.EqualValues(t, productDuplicationFactor*1, record.Quantity)
+			assert.EqualValues(t, productDuplicationFactor*10.50, record.Total)
 			break
 		}
 	}
 }
 
 func TestMixedTax(t *testing.T) {
-	receipt := NewStandardReceipt().Add(
+	receipt := MakeReceipt().Add(
 		product.Product{
 			Name:     "bottle of perfume",
 			Price:    27.99,
